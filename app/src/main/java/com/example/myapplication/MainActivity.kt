@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -240,12 +241,24 @@ fun loadLazyColumn(){
             .fillMaxSize()
             .padding(20.dp),
         content = {
-            items(50){
-                Text(text = "Item Number $it",
+//            items(50){
+//                Text(text = "Item Number $it",
+//                    fontSize = 24.sp,
+//                    textAlign = TextAlign.Center,
+//                    modifier = Modifier.fillMaxSize().padding(8.dp)
+//                    )
+//            }
+
+            itemsIndexed(
+                listOf("Henry","Bergcamp","Wright","Viera","Adams","Pires","Lumberg","Silva","Kolo","Campbel","Cole","Luaren","Lehman","Wenger")
+            ){
+                index, data ->
+
+                Text(text = "$data",
                     fontSize = 24.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.fillMaxSize().padding(8.dp)
-                    )
+                )
             }
 
     })
