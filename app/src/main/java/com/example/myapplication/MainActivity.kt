@@ -1,50 +1,72 @@
 package com.example.myapplication
 
-import android.accounts.AuthenticatorDescription
-import android.icu.text.CaseMap.Title
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Shapes
-import androidx.compose.material3.Surface
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.ui.theme.MyApplicationTheme
-import java.time.format.TextStyle
+import kotlinx.coroutines.launch
+import java.util.Random
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
 
-            val painter= painterResource(id = R.drawable.test)
-            val title="Leo Messi"
-            val contentDescription="The Goat"
+//            Scaffold(modifier = Modifier.fillMaxSize()) {
+//
+//            }
 
-            ImageCard(painter = painter, contentDescription =contentDescription , title =title )
+Column(modifier = Modifier.fillMaxSize()) {
+
+    val painter = painterResource(id = R.drawable.test)
+    val title = "Leo "
+    val title2 = "Messi"
+    val contentDescription = "The "
+    val contentDescription2 = "Goat"
+
+            ImageCard(painter = painter, contentDescription =contentDescription,contentDescription2=contentDescription2 , title =title ,title2=title2)
+
+            TextField()
+}
 //            Column (
 //                modifier = Modifier
 //                    .fillMaxWidth()
@@ -73,16 +95,25 @@ class MainActivity : ComponentActivity() {
 
 
 
-        }
-    }
+            }
+
+            }
+
+
+
+
 }
 
+
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun ImageCard(
 
     painter: Painter,
     contentDescription:String,
+    contentDescription2:String,
     title: String,
+    title2: String,
     modifier: Modifier= Modifier
 ){
 
@@ -107,19 +138,95 @@ fun ImageCard(
                 contentAlignment = Alignment.BottomStart){
 
                 Column (modifier= Modifier.fillMaxWidth()){
-                    Text(text = title,
-                        style = androidx.compose.ui.text.TextStyle(Color.White, fontSize = 16.sp)
+                    val colorList: List<Color> = listOf(Color.Red, Color.Blue,
+                        Color.Magenta, Color.Yellow, Color.Green, Color.Red)
+                    Text(
+                      text =   buildAnnotatedString {
+
+                            withStyle(style = SpanStyle( Color.White, fontSize = 16.sp)) {
+                                append(title)
+
+                            }
+
+                            withStyle(style = SpanStyle(Color.Green, fontSize = 32.sp,fontWeight = FontWeight.Bold)) {
+                                append(title2)
+                            }
+
+                        }
 
                     )
-                    Text(text = contentDescription,
-                        style = androidx.compose.ui.text.TextStyle(Color.Red, fontSize = 12.sp)
+                    Text(
 
+
+                        text = buildAnnotatedString {
+                            withStyle(style = SpanStyle(Color.White, fontSize = 16.sp)){
+                                append(contentDescription)
+                            }
+                            withStyle(style = SpanStyle(fontSize = 32.sp,fontWeight = FontWeight.Bold, brush = Brush.linearGradient(colorList))){
+                                append(contentDescription2)
+                            }
+                        }
                     )
                 }
 
 
             }
+
         }
 
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun TextField(){
+    val snackbarHostState = remember { SnackbarHostState() }
+    var textFeildState by remember {
+        mutableStateOf("")
+    }
+    val scope= rememberCoroutineScope()
+
+
+    Scaffold(modifier = Modifier
+        .fillMaxWidth()
+        .height(200.dp)
+        .padding(20.dp),
+        snackbarHost = {
+            SnackbarHost(
+                hostState = snackbarHostState
+            )
+        })
+    {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(it),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            TextField(
+                value = textFeildState,
+                label = {
+                    Text(text = "Enter Your Name")
+                },
+                onValueChange ={
+                    textFeildState=it
+                },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth()
+                )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = {
+                scope.launch {
+                    snackbarHostState.showSnackbar("My name is $textFeildState")
+                }
+            }) {
+                
+                Text(text = "Submit")
+            }
+        }
+    }
+}
+
+
+
