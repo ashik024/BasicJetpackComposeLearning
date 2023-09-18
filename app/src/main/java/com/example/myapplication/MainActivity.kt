@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,7 +57,7 @@ class MainActivity : ComponentActivity() {
 //
 //            }
 
-Column(modifier = Modifier.fillMaxSize()) {
+Column(modifier = Modifier.fillMaxSize().padding(bottom = 20.dp)) {
 
     val painter = painterResource(id = R.drawable.test)
     val title = "Leo "
@@ -66,6 +68,7 @@ Column(modifier = Modifier.fillMaxSize()) {
             ImageCard(painter = painter, contentDescription =contentDescription,contentDescription2=contentDescription2 , title =title ,title2=title2)
 
             TextField()
+            loadLazyColumn()
 }
 //            Column (
 //                modifier = Modifier
@@ -226,7 +229,26 @@ fun TextField(){
             }
         }
     }
+    
 }
 
+@Composable
+fun loadLazyColumn(){
+    
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        content = {
+            items(50){
+                Text(text = "Item Number $it",
+                    fontSize = 24.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxSize().padding(8.dp)
+                    )
+            }
+
+    })
+}
 
 
