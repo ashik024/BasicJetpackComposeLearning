@@ -1,5 +1,7 @@
 package com.example.myapplication
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -36,6 +38,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
@@ -45,11 +48,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import kotlinx.coroutines.launch
 import java.util.Random
 
 class MainActivity : ComponentActivity() {
-    @OptIn(ExperimentalMaterial3Api::class)
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -68,7 +72,7 @@ Column(modifier = Modifier.fillMaxSize().padding(bottom = 20.dp)) {
 
             ImageCard(painter = painter, contentDescription =contentDescription,contentDescription2=contentDescription2 , title =title ,title2=title2)
 
-            TextField()
+    TextFieldCall()
             loadLazyColumn()
 }
 //            Column (
@@ -183,12 +187,13 @@ fun ImageCard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextField(){
+fun TextFieldCall(){
     val snackbarHostState = remember { SnackbarHostState() }
     var textFeildState by remember {
         mutableStateOf("")
     }
     val scope= rememberCoroutineScope()
+    val context = LocalContext.current
 
 
     Scaffold(modifier = Modifier
@@ -224,6 +229,8 @@ fun TextField(){
                 scope.launch {
                     snackbarHostState.showSnackbar("My name is $textFeildState")
                 }
+
+                context.startActivity(Intent(context, ConstainLayout::class.java))
             }) {
                 
                 Text(text = "Submit")
@@ -248,7 +255,6 @@ fun loadLazyColumn(){
 //                    modifier = Modifier.fillMaxSize().padding(8.dp)
 //                    )
 //            }
-
             itemsIndexed(
                 listOf("Henry","Bergcamp","Wright","Viera","Adams","Pires","Lumberg","Silva","Kolo","Campbel","Cole","Luaren","Lehman","Wenger")
             ){
